@@ -1,0 +1,38 @@
+name: Weather Pipeline
+
+on:
+  workflow_dispatch:  # allows manual run
+  schedule:
+    - cron: "0 19 * * *"  # runs daily at 19:00 UTC (~20:00 DK time)
+
+jobs:
+  run-pipeline:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run weather fetch script
+        run: python fetch.py
+
+      - name: Generate poem with Groq
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+        run: python poem.py
+
+      - name: Commit and push results
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "actions@github.com"
+          git add data/weather.db data/weather_poem.txt
+          git commit -m "Update weather data and poem" || echo "No changes"
+          git push
