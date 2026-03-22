@@ -38,6 +38,18 @@ def load_weather_rows() -> list[dict]:
     connection.row_factory = sqlite3.Row
 
     try:
+        target_date_row = connection.execute(
+            """
+            SELECT DATE(MIN(forecast_datetime)) AS target_date
+            FROM forecasts
+            """
+        ).fetchone()
+
+        if not target_date_row or not target_date_row["target_date"]:
+            return []
+
+        target_date = target_date_row["target_date"]
+
         rows = connection.execute(
             """
             SELECT
@@ -47,14 +59,15 @@ def load_weather_rows() -> list[dict]:
                 cloud_cover,
                 relative_humidity_2m
             FROM forecasts
+            WHERE DATE(forecast_datetime) = ?
             ORDER BY location_name, forecast_datetime
-            """
+            """,
+            (target_date,),
         ).fetchall()
 
         return [dict(row) for row in rows]
     finally:
         connection.close()
-
 
 def build_weather_html(rows: list[dict]) -> str:
     if not rows:
