@@ -40,7 +40,7 @@ def load_weather_rows() -> list[dict]:
     try:
         target_date_row = connection.execute(
             """
-            SELECT DATE(MIN(forecast_datetime)) AS target_date
+            SELECT DATE(MAX(forecast_datetime)) AS target_date
             FROM forecasts
             """
         ).fetchone()
