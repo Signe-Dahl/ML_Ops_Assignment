@@ -76,9 +76,22 @@ Requirements:
 - Describe the differences clearly but poetically.
 - Suggest which location would be nicest to be in tomorrow.
 - Write first in English, then in Danish.
-- Keep it short: about 6-10 lines total.
+- Keep it short: 4 lines total for each language.
 - Mention the recommended location in both languages.
 - Do not add explanations before or after the poem.
+
+Output format:
+English:
+[line 1]
+[line 2]
+[line 3]
+[line 4]
+
+Dansk:
+[line 1]
+[line 2]
+[line 3]
+[line 4]
 """
 
     completion = client.chat.completions.create(
