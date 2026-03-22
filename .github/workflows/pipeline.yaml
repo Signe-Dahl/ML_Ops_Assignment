@@ -28,8 +28,10 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run pipeline
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
         run: |
-          python main.py
+         python main.py
 
       - name: Generate GitHub Pages site
         run: |
