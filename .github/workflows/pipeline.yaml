@@ -29,7 +29,7 @@ jobs:
 
       - name: Run pipeline
         run: |
-          python pipeline.py
+          python main.py
 
       - name: Generate GitHub Pages site
         run: |
