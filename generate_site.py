@@ -8,7 +8,7 @@ BASE_DIR = Path(__file__).resolve().parent
 DATA_DIR = BASE_DIR / "data"
 DOCS_DIR = BASE_DIR / "docs"
 
-POEM_PATH = DATA_DIR / "poem.txt"
+POEM_PATH = DATA_DIR / "weather_poem.txt"
 DB_PATH = DATA_DIR / "weather.db"
 OUTPUT_HTML = DOCS_DIR / "index.html"
 
