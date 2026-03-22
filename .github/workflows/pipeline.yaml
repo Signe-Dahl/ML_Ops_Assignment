@@ -1,15 +1,15 @@
-name: Weather Pipeline
+name: Poem Pipeline
 
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 19 * * *"  # 20:00 Danish time in winter, 21:00 in summer
+    - cron: "0 9 * * *"
 
 permissions:
   contents: write
 
 jobs:
-  run-weather-pipeline:
+  run-poem-pipeline:
     runs-on: ubuntu-latest
 
     steps:
@@ -19,7 +19,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: "3.11"
           cache: "pip"
 
       - name: Install dependencies
@@ -28,22 +28,24 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run pipeline
-        env:
-          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
         run: |
-          python main.py
+          python run_pipeline.py
 
-      - name: Commit updated data files
+      - name: Generate GitHub Pages site
+        run: |
+          python generate_site.py
+
+      - name: Commit updated artifacts
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          mkdir -p data outputs
-          git add data outputs
+          mkdir -p docs data
+          git add docs data
 
           if git diff --cached --quiet; then
             echo "No changes to commit."
           else
-            git commit -m "Update weather pipeline data"
+            git commit -m "Update poem, weather data, and site"
             git push
           fi
